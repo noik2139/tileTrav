@@ -4,7 +4,7 @@ NORTH = 'n'
 EAST = 'e'
 SOUTH = 's'
 WEST = 'w'
-COIN_COUNTER = []
+game = True
 
 def move(direction, col, row):
     ''' Returns updated col, row given the direction '''
@@ -84,19 +84,24 @@ def get_coins():
         COIN_COUNTER.append(1)
         print('You received 1 coin, your total is now {}.'.format(sum(COIN_COUNTER)))
 
+while game:
+    # The main program starts here
+    COIN_COUNTER = []
+    victory = False
+    row = 1
+    col = 1
 
-# The main program starts here
-victory = False
-row = 1
-col = 1
+    valid_directions = NORTH
+    print_directions(valid_directions)
 
-valid_directions = NORTH
-print_directions(valid_directions)
-
-while not victory:
-    victory, col, row = play_one_move(col, row, valid_directions)
-    if victory:
-        print("Victory! Total coins {}.".format(sum(COIN_COUNTER)))
-    else:
-        valid_directions = find_directions(col, row, coins)
-        print_directions(valid_directions)
+    while not victory:
+        victory, col, row = play_one_move(col, row, valid_directions)
+        if victory:
+            print("Victory! Total coins {}.".format(sum(COIN_COUNTER)))
+            play_ans = input("Play again (y/n): ")
+            play_ans = play_ans.lower()
+            if play_ans == 'n':
+                game = False
+        else:
+            valid_directions = find_directions(col, row, coins)
+            print_directions(valid_directions)
