@@ -78,11 +78,11 @@ def play_one_move(col, row, valid_directions):
     return victory, col, row
 
 def get_coins():
-    answer = input('Pull a lever (y/n):')
+    answer = input('Pull a lever (y/n): ')
     answer.lower()
     if answer == 'y':
         COIN_COUNTER.append(1)
-        print('You received 1 coin, your total is now', sum(COIN_COUNTER))
+        print('You received 1 coin, your total is now {}.'.format(sum(COIN_COUNTER)))
 
 
 # The main program starts here
@@ -96,7 +96,7 @@ print_directions(valid_directions)
 while not victory:
     victory, col, row = play_one_move(col, row, valid_directions)
     if victory:
-        print("Victory!")
+        print("Victory! Total coins {}.".format(sum(COIN_COUNTER)))
     else:
         valid_directions = find_directions(col, row, coins)
         print_directions(valid_directions)
