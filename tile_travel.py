@@ -6,6 +6,14 @@ SOUTH = 's'
 WEST = 'w'
 game = True
 
+def play():
+    play_ans = input("Play again (y/n): ")
+    play_ans = play_ans.lower()
+    if play_ans == 'n':
+        return False
+    else:
+        return True
+
 def move(direction, col, row):
     ''' Returns updated col, row given the direction '''
     if direction == NORTH:
@@ -98,10 +106,7 @@ while game:
         victory, col, row = play_one_move(col, row, valid_directions)
         if victory:
             print("Victory! Total coins {}.".format(sum(COIN_COUNTER)))
-            play_ans = input("Play again (y/n): ")
-            play_ans = play_ans.lower()
-            if play_ans == 'n':
-                game = False
+            game = play()
         else:
             valid_directions = find_directions(col, row, coins)
             print_directions(valid_directions)
