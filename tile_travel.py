@@ -1,10 +1,24 @@
 #jass queen let's do this!
+import random
+
 # Constants
 NORTH = 'n'
 EAST = 'e'
 SOUTH = 's'
 WEST = 'w'
 game = True
+
+def r_move(text):
+    m = ['w','n','e','s']
+    re = random.choice(m)
+    print(text + str(re))
+    return re
+
+def r_yn(text):
+    ans = ['y','n']
+    re = random.choice(ans)
+    print(text + str(re))
+    return re
 
 def play():
     play_ans = input("Play again (y/n): ")
@@ -47,25 +61,29 @@ def print_directions(directions_str):
         first = False
     print(".")
 coins = 0       
-def find_directions(col, row, coins):
+def find_directions(col, row, coins,is_move):
     ''' Returns valid directions as a string given the supplied location '''
     if col == 1 and row == 1:   # (1,1)
         valid_directions = NORTH
     elif col == 1 and row == 2: # (1,2)
-        get_coins()
+        if is_move:
+            get_coins()
         valid_directions = NORTH+EAST+SOUTH
     elif col == 1 and row == 3: # (1,3)
         valid_directions = EAST+SOUTH
     elif col == 2 and row == 1: # (2,1)
         valid_directions = NORTH
     elif col == 2 and row == 2: # (2,2)
-        get_coins()
+        if is_move:
+            get_coins()
         valid_directions = SOUTH+WEST
     elif col == 2 and row == 3: # (2,3)
-        get_coins()
+        if is_move:
+            get_coins()
         valid_directions = EAST+WEST
     elif col == 3 and row == 2: # (3,2)
-        get_coins() 
+        if is_move:
+            get_coins()
         valid_directions = NORTH+SOUTH
     elif col == 3 and row == 3: # (3,3)
         valid_directions = SOUTH+WEST
@@ -75,7 +93,7 @@ def play_one_move(col, row, valid_directions):
     ''' Plays one move of the game
         Return if victory has been obtained and updated col,row '''
     victory = False
-    direction = input("Direction: ")
+    direction = r_move("Direction: ")
     direction = direction.lower()
     
     if not direction in valid_directions:
@@ -83,10 +101,10 @@ def play_one_move(col, row, valid_directions):
     else:
         col, row = move(direction, col, row)
         victory = is_victory(col, row)
-    return victory, col, row
+    return victory, col, row,1
 
 def get_coins():
-    answer = input('Pull a lever (y/n): ')
+    answer = r_yn('Pull a lever (y/n): ')
     answer.lower()
     if answer == 'y':
         COIN_COUNTER.append(1)
@@ -95,18 +113,22 @@ def get_coins():
 while game:
     # The main program starts here
     COIN_COUNTER = []
+    MOVE_COUNTER = 0
     victory = False
     row = 1
     col = 1
+    random.seed(input("Input seed: "))
 
     valid_directions = NORTH
     print_directions(valid_directions)
 
     while not victory:
-        victory, col, row = play_one_move(col, row, valid_directions)
+        is_move = 0
+        victory, col, row, is_move = play_one_move(col, row, valid_directions)
+        MOVE_COUNTER += is_move
         if victory:
-            print("Victory! Total coins {}.".format(sum(COIN_COUNTER)))
+            print("Victory! Total coins {}. Moves {}.".format(sum(COIN_COUNTER),MOVE_COUNTER))
             game = play()
         else:
-            valid_directions = find_directions(col, row, coins)
+            valid_directions = find_directions(col, row, coins, is_move)
             print_directions(valid_directions)
